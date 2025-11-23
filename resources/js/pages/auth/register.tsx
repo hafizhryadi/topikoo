@@ -1,115 +1,106 @@
-import { login } from '@/routes';
-import { store } from '@/routes/register';
-import { Form, Head } from '@inertiajs/react';
+import React from 'react';
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import AuthLayout from '@/layouts/auth-layout';
+type Props = {
+    message?: string;
+};
 
-export default function Register() {
+const NotFound: React.FC<Props> = ({ message }) => {
     return (
-        <AuthLayout
-            title="Create an account"
-            description="Enter your details below to create your account"
+        <main
+            role="main"
+            aria-labelledby="notfound-title"
+            style={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2rem',
+                background: 'linear-gradient(180deg,#071024 0%, #02040a 100%)',
+                fontFamily:
+                    "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
+                color: '#e6eef8',
+            }}
         >
-            <Head title="Register" />
-            <Form
-                {...store.form()}
-                resetOnSuccess={['password', 'password_confirmation']}
-                disableWhileProcessing
-                className="flex flex-col gap-6"
+            <div
+                style={{
+                    textAlign: 'center',
+                    maxWidth: 720,
+                }}
             >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+                <div
+                    aria-hidden
+                    style={{
+                        fontSize: 96,
+                        fontWeight: 700,
+                        lineHeight: 1,
+                        color: '#60a5fa',
+                        marginBottom: 8,
+                    }}
+                >
+                    404
+                </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                <h1
+                    id="notfound-title"
+                    style={{
+                        fontSize: 28,
+                        margin: '8px 0 12px',
+                        fontWeight: 600,
+                        color: '#ffffff',
+                    }}
+                >
+                    Page not found
+                </h1>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                <p style={{ fontSize: 16, color: '#b8c7da', marginBottom: 20 }}>
+                    {message ??
+                        "Sorry, we couldn't find the page you're looking for."}
+                </p>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <Input
-                                    id="password_confirmation"
-                                    type="password"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        gap: 12,
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    <a
+                        href="/"
+                        style={{
+                            display: 'inline-block',
+                            padding: '10px 16px',
+                            background: '#0ea5e9',
+                            color: 'white',
+                            borderRadius: 8,
+                            textDecoration: 'none',
+                            fontWeight: 600,
+                            boxShadow: '0 4px 10px rgba(14,165,233,0.12)',
+                        }}
+                    >
+                        Go to homepage
+                    </a>
 
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
-                                data-test="register-user-button"
-                            >
-                                {processing && <Spinner />}
-                                Create account
-                            </Button>
-                        </div>
-
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
-                            </TextLink>
-                        </div>
-                    </>
-                )}
-            </Form>
-        </AuthLayout>
+                    <button
+                        type="button"
+                        onClick={() => window.history.back()}
+                        style={{
+                            display: 'inline-block',
+                            padding: '10px 16px',
+                            background: 'transparent',
+                            color: '#e6eef8',
+                            border: '1px solid rgba(230,238,248,0.12)',
+                            borderRadius: 8,
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                        }}
+                    >
+                        Go back
+                    </button>
+                </div>
+            </div>
+        </main>
     );
-}
+};
+
+export default NotFound;
