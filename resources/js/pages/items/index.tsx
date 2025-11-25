@@ -52,6 +52,7 @@ export default function ItemsIndex() {
                         <Button
                             type="button"
                             onClick={() => setShowCreate((s) => !s)}
+                            className="rounded-full bg-[#8B4513] px-5 text-sm font-semibold tracking-tight text-[#FFF6EC] shadow-md hover:bg-[#6F3510]"
                         >
                             New item
                         </Button>
@@ -149,15 +150,23 @@ export default function ItemsIndex() {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <Button type="submit">Create</Button>
+                                <Button
+                                    type="submit"
+                                    className="rounded-full bg-[#8B4513] px-5 text-sm font-semibold tracking-tight text-[#FFF6EC] shadow-md hover:bg-[#6F3510]"
+                                >
+                                    Create
+                                </Button>
+
                                 <Button
                                     type="button"
                                     variant="ghost"
                                     onClick={() => setShowCreate(false)}
+                                    className="text-[#8B4513] hover:text-[#6F3510]"
                                 >
                                     Cancel
                                 </Button>
                             </div>
+
                         </form>
                     </div>
                 )}

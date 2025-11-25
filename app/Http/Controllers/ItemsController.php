@@ -33,7 +33,7 @@ class ItemsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:table,column,except,id',
+            'name' => 'required|string|max:255|unique:items,name',
             'description' => 'nullable|string',
             'quantity' => 'required|integer',
             'price' => 'required|numeric',
