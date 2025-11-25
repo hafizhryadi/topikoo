@@ -1,182 +1,191 @@
-import { dashboard, login } from '@/routes';
-import { type SharedData } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import { login } from '@/routes';
+import { Coffee, BarChart3, Users, ClipboardList } from 'lucide-react';
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
-
-    const isLoggedIn = !!auth.user;
-
     return (
         <>
-            <Head title="Welcome - topii.coo">
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link
-                    href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600"
-                    rel="stylesheet"
-                />
-            </Head>
+            <Head title="topii.coo – Sistem UMKM Kopi" />
 
-            <div
-                className="min-h-screen flex flex-col"
-                style={{
-                    background:
-                        'linear-gradient(135deg, #D4A574 0%, #C68642 50%, #A0682A 100%)',
-                }}
-            >
-                {/* Navbar */}
-                <header className="w-full px-6 py-4 flex items-center justify-between">
-                    {/* Brand */}
-                    <div className="flex items-center gap-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#8B4513] shadow-md">
-                            <span className="text-lg font-bold text-white">
-                                tc
-                            </span>
+            <div className="min-h-screen bg-gradient-to-br from-[#b87033] via-[#c47a3a] to-[#a9642b] text-white">
+                {/* NAVBAR */}
+                <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 lg:px-8">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3b2414]/85 text-sm font-semibold">
+                            tc
                         </div>
                         <div className="leading-tight">
-                            <h1 className="text-lg font-bold text-[#2C1810]">
-                                topii.coo
-                            </h1>
-                            <p className="text-xs text-[#FDF5EC] opacity-90">
-                                Sistem Manajemen UMKM Terpadu
+                            <p className="text-lg font-semibold">topii.coo</p>
+                            <p className="text-xs text-white/80">
+                                UMKM Coffee Management System
                             </p>
                         </div>
                     </div>
 
-                    {/* Right nav */}
-                    <nav className="flex items-center gap-3 text-sm">
-                        {isLoggedIn ? (
-                            <Link
-                                href={dashboard()}
-                                className="rounded-full bg-white/90 px-4 py-1.5 text-xs font-semibold text-[#8B4513] shadow-sm hover:bg-white transition"
-                            >
-                                Buka Dashboard
-                            </Link>
-                        ) : (
-                            <>
-                                <Link
-                                    href={login()}
-                                    className="rounded-full border border-white/70 px-4 py-1.5 text-xs font-medium text-white hover:bg-white/10 transition"
-                                >
-                                    Masuk
-                                </Link>
-                            </>
-                        )}
+                    <nav className="hidden items-center gap-6 text-sm text-white/85 md:flex">
+                        <a href="#fitur" className="hover:text-white">
+                            Fitur
+                        </a>
+                        <a href="#manfaat" className="hover:text-white">
+                            Manfaat
+                        </a>
+                        <a href="#cara-pakai" className="hover:text-white">
+                            Cara Pakai
+                        </a>
                     </nav>
+
+                    <Link
+                        href={login()}
+                        className="rounded-full border border-white/30 bg-white/5 px-5 py-2 text-sm font-medium shadow-sm backdrop-blur hover:bg-white/15"
+                    >
+                        Masuk Admin
+                    </Link>
                 </header>
 
-                {/* Main content */}
-                <main className="flex-1 flex items-center justify-center px-6 pb-10">
-                    <div className="w-full max-w-5xl grid grid-cols-1 gap-10 md:grid-cols-2 items-center">
-                        {/* Left: hero text */}
-                        <div className="space-y-4 text-white">
-                            <p className="inline-flex items-center rounded-full bg-black/10 px-3 py-1 text-xs font-medium backdrop-blur">
-                                ☕ UMKM Coffee Management
-                            </p>
-                            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-                                Kelola stok, penjualan, dan pelanggan UMKM kopimu
-                                dalam satu sistem terpadu.
-                            </h2>
-                            <p className="text-sm md:text-base text-white/90 max-w-md">
-                                topii.coo membantu pelaku UMKM mengatur persediaan,
-                                memantau penjualan harian, dan mengenal pelanggan
-                                dengan lebih dekat—tanpa ribet, dengan tampilan
-                                hangat bertema kopi.
-                            </p>
+                {/* HERO */}
+                <main className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-4 lg:flex-row lg:items-center lg:px-8 lg:pb-24">
+                    {/* Kiri: penjelasan umum */}
+                    <section className="flex-1 space-y-6">
+        
+                        <h1 className="text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
+                            Kelola stok, penjualan, dan pelanggan dalam satu sistem terpadu.
+                        </h1>
 
-                            <div className="flex flex-wrap gap-3 mt-4">
-                                {!isLoggedIn && (
-                                    <Link
-                                        href={login()}
-                                        className="inline-flex items-center justify-center rounded-lg bg-[#8B4513] px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-[#6F3610] hover:shadow-lg transition"
-                                    >
-                                        Mulai Masuk
-                                    </Link>
-                                )}
+                        <p className="max-w-xl text-sm leading-relaxed text-white/90 sm:text-base">
+                            topii.coo membantu pelaku UMKM mencatat
+                            persediaan, memantau penjualan harian, dan
+                            menyimpan data pelanggan di satu sistem.
+                        </p>
 
-                                {isLoggedIn && (
-                                    <Link
-                                        href={dashboard()}
-                                        className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-[#8B4513] shadow-md hover:bg-[#FFF6EE] transition"
-                                    >
-                                        Lanjut ke Dashboard
-                                    </Link>
-                                )}
-
-                                <span className="text-xs text-white/85">
-                                    Tidak perlu instalasi rumit — langsung gunakan
-                                    di browser.
-                                </span>
-                            </div>
+                        <div className="flex flex-wrap items-center gap-3 pt-2">
+                            <Link
+                                href={login()}
+                                className="rounded-full bg-[#3b2414] px-6 py-2.5 text-sm font-semibold shadow-md shadow-black/30 hover:bg-[#2b1a0f]"
+                            >
+                                Masuk sebagai Admin
+                            </Link>
                         </div>
+                    </section>
 
-                        {/* Right: preview card */}
-                        <div className="flex justify-center md:justify-end">
-                            <div className="w-full max-w-sm rounded-2xl bg-white/95 p-6 shadow-2xl backdrop-blur">
-                                <h3
-                                    className="text-lg font-bold mb-4"
-                                    style={{ color: '#2C1810' }}
-                                >
-                                    Ringkasan UMKM-mu
-                                </h3>
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-3 gap-3">
-                                        <div className="rounded-xl border border-[#F2E4D3] bg-[#FFF7EC] p-3">
-                                            <p className="text-[10px] text-[#7A5A43]">
-                                                Total Produk
-                                            </p>
-                                            <p className="text-xl font-bold text-[#8B4513]">
-                                                150
-                                            </p>
-                                            <p className="text-[10px] text-[#B08A68]">
-                                                +12% bulan ini
-                                            </p>
-                                        </div>
-                                        <div className="rounded-xl border border-[#F2E4D3] bg-[#FFF7EC] p-3">
-                                            <p className="text-[10px] text-[#7A5A43]">
-                                                Penjualan
-                                            </p>
-                                            <p className="text-xl font-bold text-[#8B4513]">
-                                                Rp 45,5Jt
-                                            </p>
-                                            <p className="text-[10px] text-[#B08A68]">
-                                                +8% bulan ini
-                                            </p>
-                                        </div>
-                                        <div className="rounded-xl border border-[#F2E4D3] bg-[#FFF7EC] p-3">
-                                            <p className="text-[10px] text-[#7A5A43]">
-                                                Pelanggan
-                                            </p>
-                                            <p className="text-xl font-bold text-[#8B4513]">
-                                                328
-                                            </p>
-                                            <p className="text-[10px] text-[#B08A68]">
-                                                +15% baru
-                                            </p>
-                                        </div>
+                    {/* Kanan: ringkasan kartu */}
+                    <section className="flex-1">
+                        <div className="rounded-3xl bg-[#fdf5ee] p-6 text-[#3b2414] shadow-xl shadow-black/30 lg:p-7">
+                            <p className="text-xs font-medium text-[#b87033]">
+                                Ringkasan Usaha
+                            </p>
+                            {/* mini stats (bisa nanti diambil dari database) */}
+                            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                                <div className="rounded-2xl bg-white p-3 text-xs shadow-sm">
+                                    <div className="mb-1 flex items-center gap-2 text-[11px] font-medium text-[#b87033]">
+                                        <Coffee className="h-3.5 w-3.5" />
+                                        Produk
                                     </div>
-
-                                    <div className="mt-4 rounded-xl border border-[#F2E4D3] bg-[#FFF9F3] p-4">
-                                        <p className="text-xs font-semibold text-[#7A5A43] mb-2">
-                                            Aktivitas Terbaru
-                                        </p>
-                                        <ul className="space-y-2 text-xs text-[#5C4033]">
-                                            <li>✅ Pesanan #1234 telah selesai</li>
-                                            <li>
-                                                📦 Stok kopi gula aren telah diperbarui
-                                            </li>
-                                            <li>👥 Pelanggan baru terdaftar</li>
-                                        </ul>
+                                    <div className="text-lg font-semibold">
+                                        1 item
                                     </div>
-
-                                    <p className="mt-3 text-[10px] text-[#B08A68] text-right">
-                                        Tampilan dashboard akan muncul setelah kamu masuk.
-                                    </p>
+                                    <div className="mt-0.5 text-[11px] text-gray-500">
+                                        Contoh data dari modul Items.
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl bg-white p-3 text-xs shadow-sm">
+                                    <div className="mb-1 flex items-center gap-2 text-[11px] font-medium text-[#b87033]">
+                                        <BarChart3 className="h-3.5 w-3.5" />
+                                        Penjualan
+                                    </div>
+                                    <div className="text-lg font-semibold">
+                                        Rekap harian
+                                    </div>
+                                    <div className="mt-0.5 text-[11px] text-gray-500">
+                                        Laporan otomatis dari transaksi.
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl bg-white p-3 text-xs shadow-sm">
+                                    <div className="mb-1 flex items-center gap-2 text-[11px] font-medium text-[#b87033]">
+                                        <Users className="h-3.5 w-3.5" />
+                                        Pelanggan
+                                    </div>
+                                    <div className="text-lg font-semibold">
+                                        Tercatat rapi
+                                    </div>
+                                    <div className="mt-0.5 text-[11px] text-gray-500">
+                                        Cocok untuk program loyalti.
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* list fitur singkat */}
+                            <div
+                                id="fitur"
+                                className="mt-5 rounded-2xl bg-white p-4 text-xs shadow-sm"
+                            >
+                                <div className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-[#b87033]">
+                                    <ClipboardList className="h-3.5 w-3.5" />
+                                    Fitur utama topii.coo
+                                </div>
+                                <ul className="space-y-1 text-[11px] text-gray-700">
+                                    <li>• Pencatatan stok bahan baku & produk.</li>
+                                    <li>• Monitoring penjualan harian.</li>
+                                    <li>• Data pelanggan untuk CRM sederhana.</li>
+                                    <li>• Laporan ringkas untuk pemilik UMKM.</li>
+                                </ul>
+                                <p className="mt-3 text-[11px] text-[#7a5a40]">
+                                    Untuk mengubah data, admin harus login
+                                    terlebih dahulu.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+
+                {/* SECTION MANFAAT + FOOTER */}
+                <section
+                    id="manfaat"
+                    className="bg-[#fdf5ee]/80 text-[#3b2414]"
+                >
+                    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10 lg:flex-row lg:px-8">
+                        <div className="flex-1 space-y-3">
+                            <h3 className="text-lg font-semibold">
+                                Kenapa menggunakan sistem topii.coo?
+                            </h3>
+                            <ul className="space-y-2 text-sm text-[#6b4a30]">
+                                <li>
+                                    • Tampilan sederhana, bisa diakses lewat
+                                    browser HP.
+                                </li>
+                                <li>
+                                    • Membantu memisahkan stok usaha dengan lebih mudah.
+                                </li>
+                                <li>
+                                    • Rekap penjualan membantu perhitungan
+                                    keuntungan harian.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div
+                            id="cara-pakai"
+                            className="flex-1 space-y-3 text-sm text-[#6b4a30]"
+                        >
+                            <h3 className="text-lg font-semibold">
+                                Cara pakai singkat
+                            </h3>
+                            <ol className="list-decimal space-y-1 pl-5">
+                                <li>Admin login melalui tombol “Masuk Admin”.</li>
+                                <li>Daftarkan item & bahan baku.</li>
+                                <li>Catat penjualan dan pemakaian stok.</li>
+                                <li>
+                                    Lihat ringkasan di dashboard untuk pengambilan
+                                    keputusan.
+                                </li>
+                            </ol>
                         </div>
                     </div>
-                </main>
+
+                    <footer className="border-t border-[#e2cfbf] py-4 text-center text-xs text-[#8b6a4b]">
+                        © {new Date().getFullYear()} topii.coo — Sistem
+                        manajemen sederhana untuk UMKM kopi.
+                    </footer>
+                </section>
             </div>
         </>
     );
