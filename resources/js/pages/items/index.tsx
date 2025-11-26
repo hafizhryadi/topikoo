@@ -22,10 +22,15 @@ interface Item {
 
 export default function ItemsIndex() {
     const [showCreate, setShowCreate] = useState(false);
-    const form = useForm({
+    const form = useForm<{
+        name: string;
+        quantity: number | string;
+        price: number | string;
+        description: string;
+    }>({
         name: '',
-        quantity: 0,
-        price: 0,
+        quantity: '',
+        price: '',
         description: '',
     });
     const { items } = usePage<SharedData & { items: Item[] }>().props;
@@ -97,14 +102,21 @@ export default function ItemsIndex() {
                                         id="quantity"
                                         name="quantity"
                                         type="number"
+                                        required
                                         className="mt-1 block w-full"
                                         value={String(form.data.quantity)}
                                         onChange={(e) =>
                                             form.setData(
                                                 'quantity',
-                                                Number(e.target.value),
+                                                e.target.value === ''
+                                                    ? ''
+                                                    : Number(e.target.value),
                                             )
                                         }
+                                    />
+                                    <InputError
+                                        message={form.errors.quantity as string}
+                                        className="mt-1"
                                     />
                                 </div>
                             </div>
@@ -115,14 +127,21 @@ export default function ItemsIndex() {
                                     id="price"
                                     name="price"
                                     type="number"
+                                    required
                                     className="mt-1 block w-full"
                                     value={String(form.data.price)}
                                     onChange={(e) =>
                                         form.setData(
                                             'price',
-                                            Number(e.target.value),
+                                            e.target.value === ''
+                                                ? ''
+                                                : Number(e.target.value),
                                         )
                                     }
+                                />
+                                <InputError
+                                    message={form.errors.price as string}
+                                    className="mt-1"
                                 />
                             </div>
 
@@ -140,7 +159,6 @@ export default function ItemsIndex() {
                                         )
                                     }
                                 />
-
                                 {form.errors.description && (
                                     <div className="alert alert-danger mt-2">
                                         {form.errors.description}
@@ -161,61 +179,83 @@ export default function ItemsIndex() {
                         </form>
                     </div>
                 )}
-                <div className="overflow-x-auto rounded-md bg-background shadow-sm">
-                    <table className="min-w-full table-auto text-sm text-foreground">
-                        <thead className="bg-card text-left text-card-foreground">
-                            <tr>
-                                <th className="px-4 py-3">ID</th>
-                                <th className="px-4 py-3">Name</th>
-                                <th className="px-4 py-3">Description</th>
-                                <th className="px-4 py-3">Quantity</th>
-                                <th className="px-4 py-3">Price</th>
-                                <th className="px-4 py-3">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y">
-                            {items && items.length > 0 ? (
-                                items.map((item: Item) => (
-                                    <tr
-                                        key={item.id as number}
-                                        className="text-foreground odd:bg-card even:bg-background"
-                                    >
-                                        <td className="px-4 py-3 align-top">
-                                            {fmt(item.id)}
-                                        </td>
-                                        <td className="px-4 py-3 align-top font-medium">
+                <div className="grid">
+                    {items && items.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
+                            {items.map((item: Item) => (
+                                <article
+                                    key={item.id as number}
+                                    className="relative flex flex-col items-center justify-between rounded-md border-2 bg-card p-6 text-center shadow-sm"
+                                >
+                                    <div className="absolute top-3 right-3">
+                                        {typeof item.quantity === 'number' &&
+                                        item.quantity > 5 ? (
+                                            <span className="inline-flex items-center rounded-full bg-green-600 px-2 py-0.5 text-xs font-medium text-white">
+                                                In stock
+                                            </span>
+                                        ) : typeof item.quantity === 'number' &&
+                                          item.quantity > 0 ? (
+                                            <span className="inline-flex items-center rounded-full bg-yellow-500 px-2 py-0.5 text-xs font-medium text-white">
+                                                Low
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-medium text-white">
+                                                Out
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <header className="flex w-full items-center justify-center">
+                                        <h3 className="text-lg font-bold text-card-foreground">
                                             {fmt(item.name)}
-                                        </td>
-                                        <td className="max-w-xl px-4 py-3 align-top leading-6 wrap-break-word whitespace-normal">
-                                            {fmt(item.description)}
-                                        </td>
-                                        <td className="px-4 py-3 align-top leading-6 whitespace-normal">
-                                            {fmt(item.quantity)}
-                                        </td>
-                                        <td className="px-4 py-3 align-top leading-6 whitespace-normal">
-                                            {typeof item.price === 'number'
-                                                ? item.price.toLocaleString()
-                                                : fmt(item.price)}
-                                        </td>
-                                        <td className="px-4 py-3 align-top leading-6 whitespace-normal">
-                                            {typeof item.value === 'number'
-                                                ? item.value.toLocaleString()
-                                                : fmt(item.value)}
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan={8}
-                                        className="px-4 py-6 text-center text-sm text-gray-500"
-                                    >
-                                        No items found
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                        </h3>
+                                    </header>
+
+                                    <p className="mt-3 text-sm leading-6 whitespace-normal text-card-foreground">
+                                        {fmt(item.description)}
+                                    </p>
+
+                                    <dl className="mt-4 grid w-full grid-cols-1 gap-y-2 text-sm text-foreground">
+                                        <div>
+                                            <dt className="text-xs text-gray-400">
+                                                Quantity
+                                            </dt>
+                                            <dd className="font-medium">
+                                                {fmt(item.quantity)}
+                                            </dd>
+                                        </div>
+
+                                        <div>
+                                            <dt className="text-xs text-gray-400">
+                                                Price
+                                            </dt>
+                                            <dd className="font-medium">
+                                                {typeof item.price === 'number'
+                                                    ? item.price.toLocaleString()
+                                                    : fmt(item.price)}
+                                            </dd>
+                                        </div>
+
+                                        <div>
+                                            <dt className="text-xs text-gray-400">
+                                                Value
+                                            </dt>
+                                            <dd className="font-medium">
+                                                Rp.{' '}
+                                                {typeof item.value === 'number'
+                                                    ? item.value.toLocaleString()
+                                                    : fmt(item.value)}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </article>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="px-4 py-6 text-center text-sm text-gray-500">
+                            No items found
+                        </div>
+                    )}
                 </div>
             </div>
         </AppLayout>

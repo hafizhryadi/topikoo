@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ItemsController extends Controller
@@ -32,14 +34,48 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:table,column,except,id',
+        // Basic validation for required fields
+        $data = $request->only(['name', 'description', 'quantity', 'price']);
+
+        $validator = Validator::make($data, [
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'quantity' => 'required|integer',
-            'price' => 'required|numeric',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:1',
         ]);
 
-        $item = Item::create($validated);
+        // After base validation, enforce case-sensitive uniqueness for `name`.
+        $validator->after(function ($validator) use ($data) {
+            if (!isset($data['name'])) {
+                return;
+            }
+
+            $driver = DB::getDriverName();
+            $name = $data['name'];
+
+            $exists = false;
+
+            if ($driver === 'mysql') {
+                // MySQL: use BINARY for case-sensitive comparison
+                $exists = Item::whereRaw('BINARY `name` = ?', [$name])->exists();
+            } elseif ($driver === 'sqlite') {
+                // SQLite: apply COLLATE BINARY to the column for case-sensitive comparison
+                $exists = Item::whereRaw('"name" COLLATE BINARY = ?', [$name])->exists();
+            } else {
+                // Fallback: strict equality (may or may not be case-sensitive depending on DB)
+                $exists = Item::where('name', $name)->exists();
+            }
+
+            if ($exists) {
+                $validator->errors()->add('name', 'The name has already been taken.');
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        Item::create($validator->validated());
 
         return redirect()->route('items.index')->with('success', 'Item created successfully.');
     }
