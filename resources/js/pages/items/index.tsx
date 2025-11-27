@@ -3,9 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
-import { index as itemsIndex, store as itemsStore } from '@/routes/items';
+import {
+    destroy as itemsDestroy,
+    index as itemsIndex,
+    store as itemsStore,
+    update as itemsUpdate,
+} from '@/routes/items';
 import { SharedData, type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 
 interface Item {
@@ -22,7 +27,19 @@ interface Item {
 
 export default function ItemsIndex() {
     const [showCreate, setShowCreate] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
     const form = useForm<{
+        name: string;
+        quantity: number | string;
+        price: number | string;
+        description: string;
+    }>({
+        name: '',
+        quantity: '',
+        price: '',
+        description: '',
+    });
+    const editForm = useForm<{
         name: string;
         quantity: number | string;
         price: number | string;
@@ -184,7 +201,6 @@ export default function ItemsIndex() {
                                     Cancel
                                 </Button>
                             </div>
-
                         </form>
                     </div>
                 )}
@@ -214,49 +230,298 @@ export default function ItemsIndex() {
                                         )}
                                     </div>
 
-                                    <header className="flex w-full items-center justify-center">
-                                        <h3 className="text-lg font-bold text-card-foreground">
-                                            {fmt(item.name)}
-                                        </h3>
-                                    </header>
+                                    {editingId === item.id ? (
+                                        <form
+                                            onSubmit={(e: FormEvent) => {
+                                                e.preventDefault();
+                                                editForm.put(
+                                                    itemsUpdate(item.id).url,
+                                                    {
+                                                        onSuccess: () =>
+                                                            setEditingId(null),
+                                                    },
+                                                );
+                                            }}
+                                            className="mt-2 grid w-full gap-3 text-left"
+                                        >
+                                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                                <div>
+                                                    <Label
+                                                        htmlFor={`name_${item.id}`}
+                                                    >
+                                                        Name
+                                                    </Label>
+                                                    <Input
+                                                        id={`name_${item.id}`}
+                                                        className="mt-1 block w-full"
+                                                        required
+                                                        value={String(
+                                                            editForm.data.name,
+                                                        )}
+                                                        onChange={(e) =>
+                                                            editForm.setData(
+                                                                'name',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                    <InputError
+                                                        message={
+                                                            editForm.errors
+                                                                .name as string
+                                                        }
+                                                        className="mt-1"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Label
+                                                        htmlFor={`quantity_${item.id}`}
+                                                    >
+                                                        Quantity
+                                                    </Label>
+                                                    <Input
+                                                        id={`quantity_${item.id}`}
+                                                        type="number"
+                                                        required
+                                                        className="mt-1 block w-full"
+                                                        value={String(
+                                                            editForm.data
+                                                                .quantity,
+                                                        )}
+                                                        onChange={(e) =>
+                                                            editForm.setData(
+                                                                'quantity',
+                                                                e.target
+                                                                    .value ===
+                                                                    ''
+                                                                    ? ''
+                                                                    : Number(
+                                                                          e
+                                                                              .target
+                                                                              .value,
+                                                                      ),
+                                                            )
+                                                        }
+                                                    />
+                                                    <InputError
+                                                        message={
+                                                            editForm.errors
+                                                                .quantity as string
+                                                        }
+                                                        className="mt-1"
+                                                    />
+                                                </div>
+                                            </div>
 
-                                    <p className="mt-3 text-sm leading-6 whitespace-normal text-card-foreground">
-                                        {fmt(item.description)}
-                                    </p>
+                                            <div>
+                                                <Label
+                                                    htmlFor={`price_${item.id}`}
+                                                >
+                                                    Price
+                                                </Label>
+                                                <Input
+                                                    id={`price_${item.id}`}
+                                                    type="number"
+                                                    required
+                                                    className="mt-1 block w-full"
+                                                    value={String(
+                                                        editForm.data.price,
+                                                    )}
+                                                    onChange={(e) =>
+                                                        editForm.setData(
+                                                            'price',
+                                                            e.target.value ===
+                                                                ''
+                                                                ? ''
+                                                                : Number(
+                                                                      e.target
+                                                                          .value,
+                                                                  ),
+                                                        )
+                                                    }
+                                                />
+                                                <InputError
+                                                    message={
+                                                        editForm.errors
+                                                            .price as string
+                                                    }
+                                                    className="mt-1"
+                                                />
+                                            </div>
 
-                                    <dl className="mt-4 grid w-full grid-cols-1 gap-y-2 text-sm text-foreground">
-                                        <div>
-                                            <dt className="text-xs text-gray-400">
-                                                Quantity
-                                            </dt>
-                                            <dd className="font-medium">
-                                                {fmt(item.quantity)}
-                                            </dd>
-                                        </div>
+                                            <div>
+                                                <Label
+                                                    htmlFor={`description_${item.id}`}
+                                                >
+                                                    Description
+                                                </Label>
+                                                <Input
+                                                    id={`description_${item.id}`}
+                                                    className="mt-1 block w-full"
+                                                    value={
+                                                        (editForm.data
+                                                            .description ??
+                                                            '') as string
+                                                    }
+                                                    onChange={(e) =>
+                                                        editForm.setData(
+                                                            'description',
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                />
+                                                {editForm.errors
+                                                    .description && (
+                                                    <div className="alert alert-danger mt-2">
+                                                        {
+                                                            editForm.errors
+                                                                .description
+                                                        }
+                                                    </div>
+                                                )}
+                                            </div>
 
-                                        <div>
-                                            <dt className="text-xs text-gray-400">
-                                                Price
-                                            </dt>
-                                            <dd className="font-medium">
-                                                {typeof item.price === 'number'
-                                                    ? item.price.toLocaleString()
-                                                    : fmt(item.price)}
-                                            </dd>
-                                        </div>
+                                            <div className="mt-2 flex items-center justify-center gap-3">
+                                                <Button
+                                                    type="submit"
+                                                    className="rounded-full bg-[#8B4513] px-5 text-sm font-semibold tracking-tight text-[#FFF6EC] shadow-md hover:bg-[#6F3510]"
+                                                >
+                                                    Save
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                        setEditingId(null)
+                                                    }
+                                                    className="text-[#8B4513] hover:text-[#6F3510]"
+                                                >
+                                                    Cancel
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    className="rounded-full bg-red-600 px-5 text-sm font-semibold tracking-tight text-white shadow-md hover:bg-red-700"
+                                                    onClick={() => {
+                                                        if (
+                                                            confirm(
+                                                                'Delete this item?',
+                                                            )
+                                                        ) {
+                                                            router.delete(
+                                                                itemsDestroy(
+                                                                    item.id,
+                                                                ).url,
+                                                                {
+                                                                    onSuccess:
+                                                                        () =>
+                                                                            setEditingId(
+                                                                                null,
+                                                                            ),
+                                                                    preserveScroll: true,
+                                                                },
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </form>
+                                    ) : (
+                                        <>
+                                            <header className="flex w-full items-center justify-center">
+                                                <h3 className="text-lg font-bold text-card-foreground">
+                                                    {fmt(item.name)}
+                                                </h3>
+                                            </header>
 
-                                        <div>
-                                            <dt className="text-xs text-gray-400">
-                                                Value
-                                            </dt>
-                                            <dd className="font-medium">
-                                                Rp.{' '}
-                                                {typeof item.value === 'number'
-                                                    ? item.value.toLocaleString()
-                                                    : fmt(item.value)}
-                                            </dd>
-                                        </div>
-                                    </dl>
+                                            <p className="mt-3 text-sm leading-6 whitespace-normal text-card-foreground">
+                                                {fmt(item.description)}
+                                            </p>
+
+                                            <dl className="mt-4 grid w-full grid-cols-1 gap-y-2 text-sm text-foreground">
+                                                <div>
+                                                    <dt className="text-xs text-gray-400">
+                                                        Quantity
+                                                    </dt>
+                                                    <dd className="font-medium">
+                                                        {fmt(item.quantity)}
+                                                    </dd>
+                                                </div>
+
+                                                <div>
+                                                    <dt className="text-xs text-gray-400">
+                                                        Price
+                                                    </dt>
+                                                    <dd className="font-medium">
+                                                        {typeof item.price ===
+                                                        'number'
+                                                            ? item.price.toLocaleString()
+                                                            : fmt(item.price)}
+                                                    </dd>
+                                                </div>
+
+                                                <div>
+                                                    <dt className="text-xs text-gray-400">
+                                                        Value
+                                                    </dt>
+                                                    <dd className="font-medium">
+                                                        Rp.{' '}
+                                                        {typeof item.value ===
+                                                        'number'
+                                                            ? item.value.toLocaleString()
+                                                            : fmt(item.value)}
+                                                    </dd>
+                                                </div>
+                                            </dl>
+
+                                            <div className="mt-4 flex items-center justify-center gap-3">
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    className="rounded-full border-[#8B4513] text-[#8B4513] hover:text-[#6F3510]"
+                                                    onClick={() => {
+                                                        setEditingId(item.id);
+                                                        editForm.setData({
+                                                            name: item.name,
+                                                            quantity:
+                                                                item.quantity,
+                                                            price: item.price,
+                                                            description:
+                                                                (item.description as string) ??
+                                                                '',
+                                                        });
+                                                    }}
+                                                >
+                                                    Edit
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    className="rounded-full bg-red-600 px-5 text-sm font-semibold tracking-tight text-white shadow-md hover:bg-red-700"
+                                                    onClick={() => {
+                                                        if (
+                                                            confirm(
+                                                                'Delete this item?',
+                                                            )
+                                                        ) {
+                                                            router.delete(
+                                                                itemsDestroy(
+                                                                    item.id,
+                                                                ).url,
+                                                                {
+                                                                    preserveScroll: true,
+                                                                },
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </>
+                                    )}
                                 </article>
                             ))}
                         </div>

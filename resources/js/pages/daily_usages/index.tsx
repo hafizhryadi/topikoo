@@ -6,18 +6,18 @@ import {
 } from '@/routes/daily-usages';
 import { Head, Link } from '@inertiajs/react';
 
+interface DailyUsageItemSnapshot {
+    id: number;
+    quantity_used: number;
+    total_price: number | string;
+    item_name: string; // snapshot field only
+}
+
 interface DailyUsage {
     id: number;
     date: string;
     notes: string;
-    items: {
-        id: number;
-        quantity_used: number;
-        total_price: number | string;
-        item: {
-            name: string;
-        };
-    }[];
+    items: DailyUsageItemSnapshot[];
 }
 
 interface Props {
@@ -82,9 +82,7 @@ export default function Index({ daily_usages }: Props) {
                                                                     }
                                                                 >
                                                                     {
-                                                                        item
-                                                                            .item
-                                                                            .name
+                                                                        item.item_name
                                                                     }
                                                                     :{' '}
                                                                     {

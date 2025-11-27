@@ -101,7 +101,54 @@ class ItemsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Gather data and validate
+        $data = $request->only(['name', 'description', 'quantity', 'price']);
+
+        $validator = Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:1',
+        ]);
+
+        // Apply case-sensitive uniqueness for name, excluding current item
+        $validator->after(function ($validator) use ($data, $id) {
+            if (!isset($data['name'])) {
+                return;
+            }
+
+            $driver = DB::getDriverName();
+            $name = $data['name'];
+
+            $exists = false;
+
+            if ($driver === 'mysql') {
+                $exists = Item::whereRaw('BINARY `name` = ?', [$name])
+                    ->where('id', '!=', $id)
+                    ->exists();
+            } elseif ($driver === 'sqlite') {
+                $exists = Item::whereRaw('"name" COLLATE BINARY = ?', [$name])
+                    ->where('id', '!=', $id)
+                    ->exists();
+            } else {
+                $exists = Item::where('name', $name)
+                    ->where('id', '!=', $id)
+                    ->exists();
+            }
+
+            if ($exists) {
+                $validator->errors()->add('name', 'The name has already been taken.');
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $item = Item::findOrFail($id);
+        $item->update($validator->validated());
+
+        return redirect()->route('items.index')->with('success', 'Item updated successfully.');
     }
 
     /**
@@ -109,6 +156,9 @@ class ItemsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $item = Item::findOrFail($id);
+        $item->delete();
+
+        return redirect()->route('items.index')->with('success', 'Item deleted successfully.');
     }
 }

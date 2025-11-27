@@ -13,7 +13,8 @@ class DailyUsageController extends Controller
 {
     public function index()
     {
-        $usages = DailyUsage::with('items.item')->latest('date')->get();
+        // Load only usage items; rely on stored snapshot fields (item_name, unit_price, total_price)
+        $usages = DailyUsage::with('items')->latest('date')->get();
         return Inertia::render('daily_usages/index', [
             'daily_usages' => $usages
         ]);
@@ -56,6 +57,7 @@ class DailyUsageController extends Controller
                 DailyUsageItem::create([
                     'daily_usage_id' => $dailyUsage->id,
                     'item_id' => $item->id,
+                    'item_name' => $item->name, // snapshot
                     'quantity_used' => $itemData['quantity_used'],
                     'unit_price' => $unitPrice,
                     'total_price' => $totalPrice,
