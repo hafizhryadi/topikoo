@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DailyUsageController;
 use App\Http\Controllers\ItemsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,8 +16,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('items', ItemsController::class);
+    Route::resource('daily-usages', DailyUsageController::class);
 });
 
 
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

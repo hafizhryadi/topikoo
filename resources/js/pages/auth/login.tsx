@@ -67,7 +67,7 @@ export default function Login() {
                 onChange={(e) => setData('email', e.target.value)}
                 placeholder="masukkan email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-amber-700 transition"
+                           focus:outline-none focus:ring-2 focus:ring-amber-700 transition text-black"
               />
               {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
             </div>
@@ -83,7 +83,7 @@ export default function Login() {
                 onChange={(e) => setData('password', e.target.value)}
                 placeholder="masukkan password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-amber-700 transition"
+                           focus:outline-none focus:ring-2 focus:ring-amber-700 transition text-black"
               />
               {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
             </div>
