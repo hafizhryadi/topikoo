@@ -7,7 +7,7 @@ export default function Welcome() {
         <>
             <Head title="topii.coo – Sistem UMKM Kopi" />
 
-            <div className="min-h-screen bg-gradient-to-br from-[#b87033] via-[#c47a3a] to-[#a9642b] text-white">
+            <div className="min-h-screen bg-linear-to-br from-[#b87033] via-[#c47a3a] to-[#a9642b] text-white">
                 {/* NAVBAR */}
                 <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 lg:px-8">
                     <div className="flex items-center gap-3">

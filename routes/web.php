@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DailyUsageController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -17,6 +19,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('items', ItemsController::class);
     Route::resource('daily-usages', DailyUsageController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('transactions', TransactionController::class);
 });
 
 

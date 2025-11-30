@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('transcations', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
+            $table->string('note')->nullable();
+            $table->foreignId('product_id')->constrained('products');
+            $table->integer('amount');
+            $table->decimal('unit_price', 12, 2)->after('amount');
+            $table->decimal('total_price', 12, 2)->after('unit_price');
             $table->timestamps();
         });
     }
