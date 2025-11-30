@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->foreignId('product_id')->constrained('products');
             $table->integer('amount');
+            $table->string('phone');
             $table->decimal('unit_price', 12, 2)->after('amount');
             $table->decimal('total_price', 12, 2)->after('unit_price');
             $table->timestamps();

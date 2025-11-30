@@ -12,6 +12,7 @@ interface TransactionRow {
     id: number;
     date: string;
     note?: string | null;
+    phone?: number;
     product_id?: number;
     product?: { id: number; name: string };
     amount?: number;
@@ -34,6 +35,7 @@ type CreateItem = {
 type CreateFormData = {
     date: string;
     notes: string;
+    phone: string | number;
     items: CreateItem[];
 };
 
@@ -57,6 +59,7 @@ export default function Index() {
     const form = useForm<CreateFormData>({
         date: '',
         notes: '',
+        phone: 0,
         items: [{ product_id: '', amount: 1, unit_price: '' }],
     });
 
@@ -113,6 +116,7 @@ export default function Index() {
                 {t.product?.name || '—'}
             </td>
             <td className={cellClass}>{t.amount ?? '-'}</td>
+            <td className={cellClass}>{t.phone || '-'}</td>
             <td className={cellClass}>
                 {typeof t.unit_price === 'number'
                     ? t.unit_price.toLocaleString()
@@ -182,6 +186,25 @@ export default function Index() {
                                             onChange={(e) =>
                                                 form.setData(
                                                     'notes',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={
+                                                form.errors.notes as string
+                                            }
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="phone">Phone</Label>
+                                        <Input
+                                            id="phone"
+                                            value={form.data.phone}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'phone',
                                                     e.target.value,
                                                 )
                                             }
@@ -347,6 +370,7 @@ export default function Index() {
                                 <th className={headerClass}>Date</th>
                                 <th className={headerClass}>Product</th>
                                 <th className={headerClass}>Amount</th>
+                                <th className={headerClass}>Phone</th>
                                 <th className={headerClass}>Unit Price</th>
                                 <th className={headerClass}>Total</th>
                                 <th className={headerClass}>Notes</th>

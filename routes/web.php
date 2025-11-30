@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('daily-usages', DailyUsageController::class);
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::get('leaderboard', [TransactionController::class, 'leaderboard'])->name('transactions.leaderboard');
 });
 
 

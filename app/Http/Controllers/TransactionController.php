@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Transcation;
+use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,6 +27,17 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function leaderboard() {
+        $leaderboard = Transcation::select('phone', DB::raw('SUM(total_price) as total_spent'))
+            ->groupBy('phone')
+            ->orderByDesc('total_spent')
+            ->get();
+
+        return Inertia::render('transactions/leaderboard', [
+            'leaderboard' => $leaderboard,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -42,6 +54,7 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'date' => 'required|date',
             'notes' => 'nullable|string',
+            'phone'=>'required|numeric',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.amount' => 'required|integer|min:1',
@@ -49,7 +62,7 @@ class TransactionController extends Controller
         ]);
 
         // Create one Transcation row per selected product. Use DB transaction.
-        \DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($validated) {
             foreach ($validated['items'] as $it) {
                 $product = Product::find($it['product_id']);
 
@@ -59,6 +72,7 @@ class TransactionController extends Controller
                 Transcation::create([
                     'date' => $validated['date'],
                     'note' => $validated['notes'] ?? null,
+                    'phone' => $validated['phone'],
                     'product_id' => $product->id,
                     'amount' => $it['amount'],
                     'unit_price' => $unitPrice,
