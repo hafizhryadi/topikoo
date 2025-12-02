@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('phone');
             $table->decimal('unit_price', 12, 2);
             $table->decimal('total_price', 12, 2);
+            $table->boolean('promo_eligible')->default(false);
+            $table->unsignedInteger('promo_count')->default(0);
+            $table->string('code')->nullable();
             $table->timestamps();
         });
     }

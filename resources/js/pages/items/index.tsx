@@ -66,7 +66,7 @@ export default function ItemsIndex() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Items" />
 
-            <div className="dark min-h-screen p-6 bg-[#FFF7ED] dark:bg-[#6c4f31]">
+            <div className="dark min-h-screen p-6">
                 <header className="mb-6 flex items-center justify-between">
                     <h1 className="text-lg font-medium">Items</h1>
                     <div>

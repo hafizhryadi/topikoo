@@ -43,7 +43,7 @@ export default function Index() {
     return (
         <AppLayout>
             <Head title="Products" />
-            <div className="min-h-screen bg-[#FFF7ED] py-12 dark:bg-[#6c4f31]">
+            <div className="min-h-screen py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-xl font-semibold text-[#2C1810] dark:text-[#FFF6EC]">

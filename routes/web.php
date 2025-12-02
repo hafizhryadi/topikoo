@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminRedeemController;
+use App\Http\Controllers\RedeemController;
 use App\Http\Controllers\DailyUsageController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\ProductController;
@@ -23,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('transactions', TransactionController::class);
     Route::get('leaderboard', [TransactionController::class, 'leaderboard'])->name('transactions.leaderboard');
     Route::get('transactions/report/weekly', [TransactionController::class, 'weeklyReport'])->name('transactions.report.weekly');
+    Route::resource('redeem', RedeemController::class)->only(['index', 'store']);
 });
 
 

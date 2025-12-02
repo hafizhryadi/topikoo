@@ -18,6 +18,7 @@ interface TransactionRow {
     amount?: number;
     unit_price?: number | string;
     total_price?: number | string;
+    code?: string | null;
 }
 
 interface Product {
@@ -46,7 +47,7 @@ export default function Index() {
     const [showCreate, setShowCreate] = useState(false);
 
     const headerClass =
-        'px-6 py-3 text-left text-xs font-semibold tracking-wider uppercase text-white';
+        'px-6 py-3 text-left text-xs font-semibold tracking-wider uppercase text-[#6F3510] dark:text-[#FFF6EC]';
     const cellClass =
         'px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]';
 
@@ -59,7 +60,7 @@ export default function Index() {
     const form = useForm<CreateFormData>({
         date: '',
         notes: '',
-        phone: '',
+        phone: 0,
         items: [{ product_id: '', amount: 1, unit_price: '' }],
     });
 
@@ -130,19 +131,21 @@ export default function Index() {
             <td className={cellClass.replace('whitespace-nowrap', '')}>
                 {t.note || '-'}
             </td>
+            <td className={cellClass}>{t.code || '-'}</td>
         </tr>
     ));
 
     return (
         <AppLayout>
             <Head title="Transactions" />
-            <div className="min-h-screen bg-[#FFF7ED] py-12 dark:bg-[#6c4f31]">
+
+            <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
-                        <h2 className="text-xl font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             Transactions
                         </h2>
-                        <div className="flex flex-wrap gap-3">
+                        <div>
                             <Button
                                 type="button"
                                 onClick={() => setShowCreate((s) => !s)}
@@ -156,7 +159,7 @@ export default function Index() {
                                     (window.location.href =
                                         '/transactions/report/weekly')
                                 }
-                                className="rounded-full bg-[#3A2A1E] px-5 text-sm font-semibold tracking-tight text-[#FFF6EC] shadow-md hover:bg-[#2A1E14]"
+                                className="ml-3 rounded-full bg-[#3A2A1E] px-5 text-sm font-semibold tracking-tight text-[#FFF6EC] shadow-md hover:bg-[#2A1E14]"
                             >
                                 Download Weekly Report
                             </Button>
@@ -164,7 +167,7 @@ export default function Index() {
                     </div>
 
                     {showCreate && (
-                        <div className="mb-6 rounded-2xl border border-[#E6D4C5] bg-white/90 p-4 shadow-sm dark:border-[#A9825C] dark:bg-[#886238]">
+                        <div className="mb-6 rounded-md bg-card p-4 shadow-sm">
                             <form onSubmit={submit} className="grid gap-4">
                                 <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                                     <div>
@@ -206,7 +209,6 @@ export default function Index() {
                                             className="mt-1"
                                         />
                                     </div>
-
                                     <div>
                                         <Label htmlFor="phone">Phone</Label>
                                         <Input
@@ -221,7 +223,7 @@ export default function Index() {
                                         />
                                         <InputError
                                             message={
-                                                form.errors.phone as string
+                                                form.errors.notes as string
                                             }
                                             className="mt-1"
                                         />
@@ -239,7 +241,7 @@ export default function Index() {
                                                 >
                                                     <div className="col-span-5">
                                                         <select
-                                                            className="mt-1 block w-full rounded-md border border-[#E6D4C5] bg-white px-3 py-2 text-sm text-[#3A2A1E] shadow-sm outline-none focus:border-[#8B4513] focus:ring-1 focus:ring-[#8B4513] dark:border-[#A9825C] dark:bg-[#4a2e16] dark:text-[#FFF6EC]"
+                                                            className="mt-1 block w-full rounded-md border bg-black text-white"
                                                             value={String(
                                                                 row.product_id ??
                                                                     '',
@@ -263,14 +265,14 @@ export default function Index() {
                                                                     p: Product,
                                                                 ) => (
                                                                     <option
-                                                                        key={p.id}
+                                                                        key={
+                                                                            p.id
+                                                                        }
                                                                         value={
                                                                             p.id
                                                                         }
                                                                     >
-                                                                        {
-                                                                            p.name
-                                                                        }
+                                                                        {p.name}
                                                                     </option>
                                                                 ),
                                                             )}
@@ -307,7 +309,7 @@ export default function Index() {
                                                         />
                                                     </div>
                                                     <div className="col-span-2">
-                                                        <div className="text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                                        <div className="text-sm">
                                                             {Intl.NumberFormat(
                                                                 undefined,
                                                                 {
@@ -326,10 +328,10 @@ export default function Index() {
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <div className="col-span-1 text-center">
+                                                    <div className="col-span-1">
                                                         <button
                                                             type="button"
-                                                            className="text-lg font-bold text-red-600 hover:text-red-700"
+                                                            className="text-red-600"
                                                             onClick={() =>
                                                                 removeRow(idx)
                                                             }
@@ -345,7 +347,6 @@ export default function Index() {
                                                 type="button"
                                                 variant="outline"
                                                 onClick={addRow}
-                                                className="border-[#8B4513] text-[#8B4513] hover:bg-[#FFF7ED]"
                                             >
                                                 Add item
                                             </Button>
@@ -374,11 +375,10 @@ export default function Index() {
                     )}
 
                     <Table
-                        cols={7} // 👉 7 kolom: Date, Product, Amount, Phone, Unit Price, Total, Notes
+                        cols={6}
                         emptyMessage="No transactions yet."
                         head={
-                            // 👉 header bar coklat tua dengan teks putih
-                            <tr className="bg-[#8B4513] dark:bg-[#4a2e16]">
+                            <tr>
                                 <th className={headerClass}>Date</th>
                                 <th className={headerClass}>Product</th>
                                 <th className={headerClass}>Amount</th>
@@ -386,6 +386,7 @@ export default function Index() {
                                 <th className={headerClass}>Unit Price</th>
                                 <th className={headerClass}>Total</th>
                                 <th className={headerClass}>Notes</th>
+                                <th className={headerClass}>Code</th>
                             </tr>
                         }
                         rows={rows}

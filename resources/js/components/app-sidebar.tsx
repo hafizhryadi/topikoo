@@ -13,7 +13,17 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Apple, BookOpen, Coffee, DollarSign, Folder, LayoutGrid, PackageOpen, Trophy } from 'lucide-react';
+import {
+    Apple,
+    BookOpen,
+    Coffee,
+    DollarSign,
+    Folder,
+    LayoutGrid,
+    PackageOpen,
+    TicketPercent,
+    Trophy,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -23,19 +33,19 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Items',
-        href: '/items',
-        icon: Apple,
-    },
-    {
         title: 'Daily Usage',
         href: '/daily-usages',
         icon: PackageOpen,
     },
     {
+        title: 'Items',
+        href: '/items',
+        icon: Apple,
+    },
+    {
         title: 'Products',
         href: '/products',
-        icon: Coffee
+        icon: Coffee,
     },
     {
         title: 'Transactions',
@@ -46,6 +56,11 @@ const mainNavItems: NavItem[] = [
         title: 'Leaderboard',
         href: '/leaderboard',
         icon: Trophy,
+    },
+    {
+        title: 'Redeem',
+        href: '/redeem',
+        icon: TicketPercent,
     }
 ];
 

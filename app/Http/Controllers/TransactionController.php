@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Transcation;
+use App\Services\WhatsAppNotifier;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class TransactionController extends Controller
@@ -117,8 +119,52 @@ class TransactionController extends Controller
             'items.*.unit_price' => 'nullable|numeric|min:0',
         ]);
 
+        // Calculate grand total for promo eligibility (1 promo per 100000)
+        $grandTotal = 0;
+        foreach ($validated['items'] as $it) {
+            $product = Product::find($it['product_id']);
+            $unitPrice = $it['unit_price'] ?? ($product->price ?? 0);
+            $grandTotal += ($unitPrice * ($it['amount'] ?? 0));
+        }
+
+        $perThreshold = 100000;
+        $promoCount = (int) floor($grandTotal / $perThreshold);
+
+        // Generate promo codes (kept in-memory; optionally appended into first row's note)
+        $promoCodes = [];
+        if ($promoCount > 0) {
+            for ($i = 0; $i < $promoCount; $i++) {
+                $promoCodes[] = strtoupper(Str::random(8));
+            }
+        }
+
+        // Normalize phone to E.164 (+62...) if needed (keeps same DB column)
+        $phone = (string) $validated['phone'];
+        if (substr($phone, 0, 1) !== '+') {
+            $phone = '+62' . ltrim($phone, '0');
+        }
+
+        // Send WhatsApp notification if any promo
+        // if ($promoCount > 0) {
+        //     $codesList = implode(', ', $promoCodes);
+        //     $message = "Terima kasih! Anda mendapatkan promo.\n"
+        //         . "Kode redeem ({$promoCount}): {$codesList}\n\n"
+        //         . "Silakan tukarkan kode di: toko offline\n"
+        //         . "Syarat & ketentuan berlaku.";
+        //     try {
+        //         $wa->send($phone, $message);
+        //     } catch (\Throwable $e) {
+        //         \Log::warning('WhatsApp send failed', ['phone' => $phone, 'error' => $e->getMessage()]);
+        //     }
+        // }
+
         // Create one Transcation row per selected product. Use DB transaction.
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($validated, $promoCodes) {
+            $appendNote = '';
+            if (!empty($promoCodes)) {
+                $appendNote = ' Promo codes: ' . implode(', ', array: $promoCodes);
+            }
+            $isFirst = true;
             foreach ($validated['items'] as $it) {
                 $product = Product::find($it['product_id']);
 
@@ -127,13 +173,15 @@ class TransactionController extends Controller
 
                 Transcation::create([
                     'date' => $validated['date'],
-                    'note' => $validated['notes'] ?? null,
+                    'note' => ($validated['notes'] ?? null),
                     'phone' => $validated['phone'],
                     'product_id' => $product->id,
                     'amount' => $it['amount'],
                     'unit_price' => $unitPrice,
                     'total_price' => $totalPrice,
+                    'code' => $isFirst && !empty($promoCodes) ? implode(', ', $promoCodes) : null,
                 ]);
+                $isFirst = false;
             }
         });
 
