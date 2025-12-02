@@ -51,13 +51,13 @@ class DailyUsageController extends Controller
                 $item->decrement('quantity', $itemData['quantity_used']);
 
                 // Calculate prices
-                $unitPrice = $item->price; // Assuming price is integer/decimal in Item model
+                $unitPrice = $item->price; 
                 $totalPrice = $unitPrice * $itemData['quantity_used'];
 
                 DailyUsageItem::create([
                     'daily_usage_id' => $dailyUsage->id,
                     'item_id' => $item->id,
-                    'item_name' => $item->name, // snapshot
+                    'item_name' => $item->name,
                     'quantity_used' => $itemData['quantity_used'],
                     'unit_price' => $unitPrice,
                     'total_price' => $totalPrice,
