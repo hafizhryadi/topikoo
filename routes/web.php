@@ -7,6 +7,7 @@ use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
@@ -15,9 +16,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('items', ItemsController::class);
     Route::resource('daily-usages', DailyUsageController::class);

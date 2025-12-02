@@ -1,8 +1,15 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { BarChart3, Package, Users } from 'lucide-react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import {
+    BarChart3,
+    Package,
+    Percent,
+    ShoppingCart,
+    TicketPercent,
+    Users,
+} from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,7 +18,41 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface MetricsProps {
+    [key: string]: unknown;
+    metrics?: {
+        items: number;
+        products: number;
+        transactions: number;
+        daily_usages: number;
+        revenue: number;
+        unique_customers: number;
+        promo_codes_total: number;
+        promo_codes_unredeemed: number;
+    };
+}
+
 export default function Dashboard() {
+    const { props } = usePage<MetricsProps>();
+    const m = props.metrics ?? {
+        items: 0,
+        products: 0,
+        transactions: 0,
+        daily_usages: 0,
+        revenue: 0,
+        unique_customers: 0,
+        promo_codes_total: 0,
+        promo_codes_unredeemed: 0,
+    };
+
+    const fmtCurrency = (v: number) =>
+        Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            maximumFractionDigits: 0,
+        }).format(v);
+    const averageTransactionValue =
+        m.transactions > 0 ? Math.round(m.revenue / m.transactions) : 0;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -39,91 +80,183 @@ export default function Dashboard() {
                     </div>
                 </header>
 
-                {/* MENU CARDS */}
-                <section className="grid gap-4 md:grid-cols-3">
-                    {/* Inventory / Items */}
+                {/* MENU / SUMMARY CARDS */}
+                <section className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
                     <Link
                         href="/items"
-                        className="group flex flex-col justify-between rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
                     >
-                        <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase">
-                                    Inventory
+                                    Items
                                 </p>
                                 <h2 className="mt-1 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
-                                    Items & Stok Bahan Baku Usaha
+                                    Inventory & Stock
                                 </h2>
                             </div>
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF4E6]">
                                 <Package className="h-5 w-5 text-[#8B4513]" />
                             </div>
                         </div>
-                        <p className="mt-3 text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
-                            Kelola daftar produk kopi, jumlah stok, dan nilai
-                            persediaan.
+                        <p className="text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
+                            Total item types terdaftar.
                         </p>
-                        <div className="mt-4 flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
-                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C] dark:text-[#FFF6EC]">
-                                Lihat Items
+                        <div className="mt-auto flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
+                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C]">
+                                {m.items} jenis
                             </span>
-                            <span className="group-hover:text-[#8B4513] dark:group-hover:text-[#FFF6EC]">
+                            <span className="group-hover:text-[#8B4513]">
                                 ›
                             </span>
                         </div>
                     </Link>
 
-                    {/* CRM */}
-                    <div className="flex flex-col justify-between rounded-2xl border border-[#E6D4C5] bg-white/80 p-5 opacity-90 shadow-sm dark:border-[#A9825C] dark:bg-[#886238]">
-                        <div className="flex items-start justify-between gap-3">
+                    <Link
+                        href="/products"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
+                    >
+                        <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase">
-                                    CRM
+                                    Products
                                 </p>
                                 <h2 className="mt-1 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
-                                    Pelanggan
+                                    Menu Aktif
                                 </h2>
                             </div>
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FDECEC]">
-                                <Users className="h-5 w-5 text-[#A85125]" />
+                                <ShoppingCart className="h-5 w-5 text-[#A85125]" />
                             </div>
                         </div>
-                        <p className="mt-3 text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
-                            Modul CRM akan membantu melacak pelanggan, pesanan,
-                            dan loyalitas.
+                        <p className="text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
+                            Produk kopi / minuman dijual.
                         </p>
-                        <div className="mt-4 text-xs font-medium text-[#B0845A] dark:text-[#FFF6EC]">
-                            ..........
+                        <div className="mt-auto flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
+                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C]">
+                                {m.products} produk
+                            </span>
+                            <span className="group-hover:text-[#8B4513]">
+                                ›
+                            </span>
                         </div>
-                    </div>
+                    </Link>
 
-                    {/* Reports */}
                     <Link
-                        href="/daily-usages"
-                        className="flex flex-col justify-between rounded-2xl border border-[#E6D4C5] bg-white/80 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
+                        href="/transactions"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
                     >
-                        <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase dark:text-white">
-                                    Reports
+                                <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase">
+                                    Transactions
                                 </p>
                                 <h2 className="mt-1 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
-                                    Laporan Harian
+                                    Penjualan
                                 </h2>
                             </div>
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EAF5FF]">
                                 <BarChart3 className="h-5 w-5 text-[#8B4513]" />
                             </div>
                         </div>
-                        <p className="mt-3 text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
-                            Rekap pemakaian item harian, nilai stok, dan
-                            performa penjualan.
+                        <p className="text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
+                            Total transaksi tercatat.
                         </p>
-                        <div className="mt-4 flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
-                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C] dark:text-[#FFF6EC]">
-                                Lihat Pengunaan Harian
+                        <div className="mt-auto flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
+                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C]">
+                                {m.transactions} trx
                             </span>
-                            <span className="group-hover:text-[#8B4513] dark:group-hover:text-[#FFF6EC]">
+                            <span className="group-hover:text-[#8B4513]">
+                                ›
+                            </span>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/daily-usages"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase">
+                                    Daily Usages
+                                </p>
+                                <h2 className="mt-1 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
+                                    Pemakaian Bahan
+                                </h2>
+                            </div>
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF4E6]">
+                                <Percent className="h-5 w-5 text-[#8B4513]" />
+                            </div>
+                        </div>
+                        <p className="text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
+                            Log pemakaian harian tercatat.
+                        </p>
+                        <div className="mt-auto flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
+                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C]">
+                                {m.daily_usages} log
+                            </span>
+                            <span className="group-hover:text-[#8B4513]">
+                                ›
+                            </span>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/leaderboard"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase">
+                                    Leaderboard
+                                </p>
+                                <h2 className="mt-1 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
+                                    Top Customers
+                                </h2>
+                            </div>
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FDECEC]">
+                                <Users className="h-5 w-5 text-[#A85125]" />
+                            </div>
+                        </div>
+                        <p className="text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
+                            Pelanggan unik tercatat.
+                        </p>
+                        <div className="mt-auto flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
+                            <span className="rounded-full bg-[#F7E6D4] px-3 py-1 font-medium dark:bg-[#A9825C]">
+                                {m.unique_customers} pelanggan
+                            </span>
+                            <span className="group-hover:text-[#8B4513]">
+                                ›
+                            </span>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/redeem"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[#E6D4C5] bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-[#A9825C] dark:bg-[#886238]"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-xs font-semibold tracking-wide text-[#B0845A] uppercase">
+                                    Promos
+                                </p>
+                                <h2 className="mt-1 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
+                                    Kode Promo
+                                </h2>
+                            </div>
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EAF5FF]">
+                                <TicketPercent className="h-5 w-5 text-[#8B4513]" />
+                            </div>
+                        </div>
+                        <p className="text-sm text-[#7C6A5A] dark:text-[#E6D5C7]">
+                            Redeem kode promo
+                        </p>
+                        <div className="mt-auto flex items-center justify-between text-xs text-[#5C4033] dark:text-[#FFF6EC]">
+                            <span className="">
+                                {/* {m.promo_codes_unredeemed}/{m.promo_codes_total} */}
+                            </span>
+                            <span className="group-hover:text-[#8B4513]">
                                 ›
                             </span>
                         </div>
@@ -148,12 +281,11 @@ export default function Dashboard() {
                                 <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
                                 <div>
                                     <p className="text-sm font-medium text-[#3C2415] dark:text-[#FFF6EC]">
-                                        Inventory
+                                        Ringkasan Penjualan
                                     </p>
                                     <p className="text-xs text-[#8B6B4A] dark:text-[#E6D5C7]">
-                                        1 produk aktif terdaftar di modul Items.
-                                        Nilai persediaan sudah terbaca di
-                                        sistem.
+                                        Total revenue tercatat:{' '}
+                                        {fmtCurrency(m.revenue)}
                                     </p>
                                 </div>
                             </div>
@@ -163,12 +295,12 @@ export default function Dashboard() {
                                 <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#f97316]" />
                                 <div>
                                     <p className="text-sm font-medium text-[#3C2415] dark:text-[#FFF6EC]">
-                                        Reminder Stok
+                                        Nilai Rata-Rata Transaksi
                                     </p>
                                     <p className="text-xs text-[#8B6B4A] dark:text-[#E6D5C7]">
-                                        Pastikan stok rutin diperbarui sebelum
-                                        jadwal jualan agar laporan harian tetap
-                                        akurat.
+                                        Rata-rata per transaksi:{' '}
+                                        {fmtCurrency(averageTransactionValue)} •
+                                        Total transaksi: {m.transactions}
                                     </p>
                                 </div>
                             </div>
@@ -178,12 +310,12 @@ export default function Dashboard() {
                                 <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#eab308]" />
                                 <div>
                                     <p className="text-sm font-medium text-[#3C2415] dark:text-[#FFF6EC]">
-                                        Catatan Produk
+                                        Aktivitas Sistem
                                     </p>
                                     <p className="text-xs text-[#8B6B4A] dark:text-[#E6D5C7]">
-                                        Lengkapi deskripsi produk (jenis kopi,
-                                        kemasan, catatan rasa) untuk memudahkan
-                                        laporan dan CRM.
+                                        Log harian: {m.daily_usages} •
+                                        Transaksi: {m.transactions} • Pelanggan:{' '}
+                                        {m.unique_customers}
                                     </p>
                                 </div>
                             </div>
@@ -203,7 +335,7 @@ export default function Dashboard() {
                                         Total Produk
                                     </p>
                                     <p className="text-base font-semibold text-[#3C2415] dark:text-[#FFF6EC]">
-                                        1 item
+                                        {m.products} produk
                                     </p>
                                 </div>
                                 <span className="rounded-full bg-[#FFF0D9] px-3 py-1 text-xs font-medium text-[#A46A3B] dark:bg-[#A9825C] dark:text-[#FFF6EC]">
@@ -214,10 +346,10 @@ export default function Dashboard() {
                             <div className="flex items-center justify-between rounded-xl bg-white/90 px-4 py-3 shadow-sm dark:bg-[#886238]">
                                 <div>
                                     <p className="text-xs font-medium text-[#8B6B4A] dark:text-[#E6D5C7]">
-                                        Status Stok
+                                        Item Types
                                     </p>
-                                    <p className="text-base font-semibold text-[#16a34a]">
-                                        Aman
+                                    <p className="text-base font-semibold text-[#3C2415] dark:text-[#FFF6EC]">
+                                        {m.items} jenis
                                     </p>
                                 </div>
                                 <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-xs font-medium text-[#15803d] dark:bg-[#A9825C] dark:text-[#FFF6EC]">
@@ -228,10 +360,10 @@ export default function Dashboard() {
                             <div className="flex items-center justify-between rounded-xl bg-white/90 px-4 py-3 shadow-sm dark:bg-[#886238]">
                                 <div>
                                     <p className="text-xs font-medium text-[#8B6B4A] dark:text-[#E6D5C7]">
-                                        Modul Aktif
+                                        Customers
                                     </p>
                                     <p className="text-base font-semibold text-[#3C2415] dark:text-[#FFF6EC]">
-                                        Items
+                                        {m.unique_customers} unik
                                     </p>
                                 </div>
                                 <span className="rounded-full bg-[#FFEAD5] px-3 py-1 text-xs font-medium text-[#C05621] dark:bg-[#A9825C] dark:text-[#FFF6EC]">
