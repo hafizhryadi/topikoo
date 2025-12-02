@@ -11,9 +11,7 @@ export default function Welcome() {
                 {/* NAVBAR */}
                 <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 lg:px-8">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3b2414]/85 text-sm font-semibold">
-                            tc
-                        </div>
+                        <img src="topico_logo.png" width={100} alt="" />
                         <div className="leading-tight">
                             <p className="text-lg font-semibold">topii.coo</p>
                             <p className="text-xs text-white/80">

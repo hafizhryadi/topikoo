@@ -151,6 +151,16 @@ export default function Index() {
                             >
                                 New Transaction
                             </Button>
+                            <Button
+                                type="button"
+                                onClick={() =>
+                                    (window.location.href =
+                                        '/transactions/report/weekly')
+                                }
+                                className="ml-3 rounded-full bg-[#3A2A1E] px-5 text-sm font-semibold tracking-tight text-[#FFF6EC] shadow-md hover:bg-[#2A1E14]"
+                            >
+                                Download Weekly Report
+                            </Button>
                         </div>
                     </div>
 

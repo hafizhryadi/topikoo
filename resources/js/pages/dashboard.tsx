@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { BarChart3, Coffee, Package, Users } from 'lucide-react';
+import { BarChart3, Package, Users } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,8 +20,8 @@ export default function Dashboard() {
                 {/* Header */}
                 <header className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#8B4513] shadow-md">
-                            <Coffee className="h-6 w-6 text-white" />
+                        <div className="flex h-30 w-30 items-center justify-center">
+                            <img src="topico_logo.png" alt="" />
                         </div>
                         <div>
                             <h1 className="text-xl font-semibold text-[#2C1810] dark:text-white">
