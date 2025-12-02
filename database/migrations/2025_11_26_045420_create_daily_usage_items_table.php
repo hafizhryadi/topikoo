@@ -12,11 +12,22 @@ return new class extends Migration {
     {
         Schema::create('daily_usage_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('daily_usage_id')->constrained('daily_usages')->onDelete('cascade');
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+
+            // relasi ke daily_usages
+            $table->foreignId('daily_usage_id')
+                ->constrained('daily_usages')
+                ->onDelete('cascade');
+
+            // relasi ke items
+            $table->foreignId('item_id')
+                ->constrained('items')
+                ->onDelete('cascade');
+
+            // kolom-kolom nilai
             $table->integer('quantity_used');
-            $table->decimal('unit_price', 12, 2)->after('quantity_used');
-            $table->decimal('total_price', 12, 2)->after('unit_price');
+            $table->decimal('unit_price', 12, 2);
+            $table->decimal('total_price', 12, 2);
+
             $table->timestamps();
         });
     }

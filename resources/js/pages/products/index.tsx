@@ -43,11 +43,10 @@ export default function Index() {
     return (
         <AppLayout>
             <Head title="Products" />
-
-            <div className="py-12">
+            <div className="min-h-screen bg-[#FFF7ED] py-12 dark:bg-[#6c4f31]">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                        <h2 className="text-xl font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
                             Products
                         </h2>
                         <div>
@@ -62,7 +61,7 @@ export default function Index() {
                     </div>
 
                     {showCreate && (
-                        <div className="mb-6 rounded-md bg-card p-4 shadow-sm">
+                        <div className="mb-6 rounded-2xl border border-[#E6D4C5] bg-white/90 p-4 shadow-sm dark:border-[#A9825C] dark:bg-[#886238]">
                             <form onSubmit={submit} className="grid gap-3">
                                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     <div>
@@ -159,17 +158,17 @@ export default function Index() {
                         cols={4}
                         emptyMessage="No products found."
                         head={
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-[#6F3510] uppercase dark:text-[#FFF6EC]">
+                            <tr className="bg-[#8B4513] dark:bg-[#4a2e16]">
+                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
                                     Name
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-[#6F3510] uppercase dark:text-[#FFF6EC]">
+                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
                                     Description
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-[#6F3510] uppercase dark:text-[#FFF6EC]">
+                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
                                     Price
                                 </th>
-                                <th className="px-6 py-3 text-right text-xs font-semibold tracking-wider text-[#6F3510] uppercase dark:text-[#FFF6EC]">
+                                <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-white">
                                     Actions
                                 </th>
                             </tr>
@@ -178,13 +177,13 @@ export default function Index() {
                             products && products.length > 0
                                 ? products.map((p) => (
                                       <tr key={p.id}>
-                                          <td className="px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                          <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
                                               {p.name}
                                           </td>
                                           <td className="px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
                                               {p.description || '-'}
                                           </td>
-                                          <td className="px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                          <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
                                               {typeof p.price === 'number'
                                                   ? p.price.toLocaleString()
                                                   : p.price}
