@@ -11,7 +11,7 @@ interface DailyUsageItemSnapshot {
     id: number;
     quantity_used: number;
     total_price: number | string;
-    item_name: string; 
+    item_name: string;
 }
 
 interface DailyUsage {
@@ -67,7 +67,12 @@ export default function Index({ daily_usages }: Props) {
                         rows={daily_usages.map((usage) => (
                             <tr key={usage.id}>
                                 <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
-                                    {new Date(usage.date).toLocaleDateString()}
+                                    {new Date(usage.date).toLocaleDateString('id-ID', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                    })}
+
                                 </td>
                                 <td className="px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
                                     <ul className="list-disc pl-4">
