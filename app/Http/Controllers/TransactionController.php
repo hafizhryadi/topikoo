@@ -27,7 +27,8 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function leaderboard() {
+    public function leaderboard()
+    {
         $leaderboard = Transcation::select('phone', DB::raw('SUM(total_price) as total_spent'))
             ->groupBy('phone')
             ->orderByDesc('total_spent')
@@ -35,6 +36,61 @@ class TransactionController extends Controller
 
         return Inertia::render('transactions/leaderboard', [
             'leaderboard' => $leaderboard,
+        ]);
+    }
+
+    /**
+     * Download weekly transactions report (CSV) for the last 7 days.
+     */
+    public function weeklyReport()
+    {
+        $from = now()->subDays(7)->startOfDay();
+        $to = now()->endOfDay();
+
+        $rows = Transcation::with('product')
+            ->whereBetween('date', [$from->toDateString(), $to->toDateString()])
+            ->orderBy('date')
+            ->get(['id', 'date', 'phone', 'product_id', 'amount', 'unit_price', 'total_price', 'note']);
+
+        // Generate an Excel-compatible HTML table and serve as .xls
+        $filename = 'weekly-transactions-' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($rows) {
+            echo '<html><head><meta charset="UTF-8"></head><body>';
+            echo '<table border="1">';
+            echo '<tr>';
+            foreach (['Date', 'Phone', 'Product', 'Amount', 'Unit Price', 'Total', 'Notes'] as $h) {
+                echo '<th>' . htmlspecialchars($h, ENT_QUOTES, 'UTF-8') . '</th>';
+            }
+            echo '</tr>';
+            $grandTotal = 0;
+            foreach ($rows as $r) {
+                echo '<tr>';
+                $cols = [
+                    $r->date,
+                    $r->phone,
+                    optional($r->product)->name,
+                    $r->amount,
+                    $r->unit_price,
+                    $r->total_price,
+                    $r->note,
+                ];
+                $grandTotal += (float) ($r->total_price ?? 0);
+                foreach ($cols as $c) {
+                    echo '<td>' . htmlspecialchars((string) ($c ?? ''), ENT_QUOTES, 'UTF-8') . '</td>';
+                }
+                echo '</tr>';
+            }
+            // Grand total row
+            echo '<tr>';
+            echo '<td colspan="5" style="font-weight:bold">Grand Total</td>';
+            echo '<td style="font-weight:bold">' . htmlspecialchars((string) $grandTotal, ENT_QUOTES, 'UTF-8') . '</td>';
+            echo '<td></td>';
+            echo '</tr>';
+            echo '</table>';
+            echo '</body></html>';
+        }, $filename, [
+            'Content-Type' => 'application/vnd.ms-excel',
         ]);
     }
 
@@ -54,7 +110,7 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'date' => 'required|date',
             'notes' => 'nullable|string',
-            'phone'=>'required|numeric',
+            'phone' => 'required|numeric',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.amount' => 'required|integer|min:1',

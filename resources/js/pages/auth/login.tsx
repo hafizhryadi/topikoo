@@ -1,6 +1,5 @@
 // Login.tsx
 import React from 'react';
-import { Coffee } from 'lucide-react';
 import { useForm } from '@inertiajs/react';
 
 export default function Login() {
@@ -25,12 +24,11 @@ export default function Login() {
     >
       <div className="w-full max-w-md">
         {/* Logo & brand */}
-        <div className="text-center mb-8">
+        <div className="text-center">
           <div
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
-            style={{ backgroundColor: '#8B4513' }}
+            className="inline-flex items-center justify-center w-40 h-40"
           >
-            <Coffee className="w-10 h-10 text-white" strokeWidth={2} />
+            <img src="topico_logo.png" alt="" />
           </div>
           <h1
             className="text-4xl font-bold mb-2"
@@ -38,7 +36,7 @@ export default function Login() {
           >
             topii.coo
           </h1>
-          <p className="text-white text-sm font-medium opacity-90">
+          <p className="text-white text-sm font-medium opacity-90 mb-8">
             Sistem Manajemen UMKM Terpadu
           </p>
         </div>
