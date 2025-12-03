@@ -18,6 +18,7 @@ export default function Leaderboard() {
 
     const rows = (leaderboard || []).map((row, idx) => (
         <tr key={idx}>
+            <td className={cellClass}>{idx + 1}</td>
             <td className={cellClass}>{row.phone || '-'}</td>
             <td className={cellClass}>
                 {typeof row.total_spent === 'number'
@@ -43,10 +44,11 @@ export default function Leaderboard() {
                     </div>
 
                     <Table
-                        cols={2}
+                        cols={3}
                         emptyMessage="No data yet."
                         head={
                             <tr>
+                                <th className={headerClass}>No.</th>
                                 <th className={headerClass}>Phone</th>
                                 <th className={headerClass}>Total Spent</th>
                             </tr>
