@@ -23,7 +23,7 @@ export default function Table({
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-[#E6D5C7] dark:divide-[#3A2A1E]">
                         {head && (
-                            <thead className="bg-[#FFF6EC] dark:bg-[#3A2A1E]">
+                            <thead className="bg-[#351c00] dark:bg-[#5e4029]">
                                 {head}
                             </thead>
                         )}
