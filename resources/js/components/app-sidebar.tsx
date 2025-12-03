@@ -31,14 +31,14 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Daily Usage',
-        href: '/daily-usages',
-        icon: PackageOpen,
-    },
-    {
         title: 'Items',
         href: '/items',
         icon: Apple,
+    },
+    {
+        title: 'Daily Usage',
+        href: '/daily-usages',
+        icon: PackageOpen,
     },
     {
         title: 'Products',
