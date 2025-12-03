@@ -241,7 +241,7 @@ export default function Index() {
                                                 >
                                                     <div className="col-span-5">
                                                         <select
-                                                            className="mt-1 block w-full rounded-md border bg-black text-white"
+                                                            className="mt-1 block w-full rounded-md border dark:bg-black dark:text-white"
                                                             value={String(
                                                                 row.product_id ??
                                                                     '',
