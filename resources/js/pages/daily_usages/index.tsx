@@ -81,7 +81,7 @@ export default function Index({ daily_usages }: Props) {
                                         {usage.items.map((item) => (
                                             <li key={item.id}>
                                                 {item.item_name}:{' '}
-                                                {item.quantity_used} Kg
+                                                {item.quantity_used}
                                             </li>
                                         ))}
                                     </ul>

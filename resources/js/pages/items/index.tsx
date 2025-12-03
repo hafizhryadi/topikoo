@@ -445,7 +445,7 @@ export default function ItemsIndex() {
                                                         Quantity
                                                     </dt>
                                                     <dd className="font-medium">
-                                                        {fmt(item.quantity)} Kg
+                                                        {fmt(item.quantity)}
                                                     </dd>
                                                 </div>
 
