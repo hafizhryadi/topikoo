@@ -47,7 +47,7 @@ export default function Index() {
     const [showCreate, setShowCreate] = useState(false);
 
     const headerClass =
-        'px-6 py-3 text-left text-xs font-semibold tracking-wider uppercase text-[#6F3510] dark:text-[#FFF6EC]';
+        'px-6 py-3 text-left text-xs font-semibold tracking-wider uppercase text-white';
     const cellClass =
         'px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]';
 

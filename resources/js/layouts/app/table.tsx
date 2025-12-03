@@ -19,11 +19,11 @@ export default function Table({
 
     return (
         <div className={`overflow-hidden sm:rounded-lg ${className}`}>
-            <div className="p-6 text-gray-900 dark:text-gray-100">
+            <div className=" text-gray-100">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-[#E6D5C7] dark:divide-[#3A2A1E]">
                         {head && (
-                            <thead className="bg-[#351c00] dark:bg-[#5e4029]">
+                            <thead className="bg-[#8B4513] dark:bg-[#4a2e16]">
                                 {head}
                             </thead>
                         )}
