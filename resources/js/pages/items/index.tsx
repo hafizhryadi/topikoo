@@ -114,7 +114,7 @@ export default function ItemsIndex() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="quantity">Quantity</Label>
+                                    <Label htmlFor="quantity">Quantity in Kg</Label>
                                     <Input
                                         id="quantity"
                                         name="quantity"
@@ -445,7 +445,7 @@ export default function ItemsIndex() {
                                                         Quantity
                                                     </dt>
                                                     <dd className="font-medium">
-                                                        {fmt(item.quantity)}
+                                                        {fmt(item.quantity)} Kg
                                                     </dd>
                                                 </div>
 
