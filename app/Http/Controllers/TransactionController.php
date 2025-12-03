@@ -72,19 +72,21 @@ class TransactionController extends Controller
         $html .= '</tr></thead><tbody>';
         foreach ($rows as $r) {
             $grandTotal += (float) ($r->total_price ?? 0);
+            $unitFmt = is_null($r->unit_price) ? '' : number_format((float) $r->unit_price, 0, ',', '.');
+            $totalFmt = is_null($r->total_price) ? '' : number_format((float) $r->total_price, 0, ',', '.');
             $html .= '<tr>'
                 . '<td>' . e($r->date) . '</td>'
                 . '<td>' . e((string) ($r->phone ?? '')) . '</td>'
                 . '<td>' . e(optional($r->product)->name) . '</td>'
                 . '<td>' . e((string) ($r->amount ?? '')) . '</td>'
-                . '<td>' . e((string) ($r->unit_price ?? '')) . '</td>'
-                . '<td>' . e((string) ($r->total_price ?? '')) . '</td>'
+                . '<td>' . ($unitFmt !== '' ? 'Rp. ' . e($unitFmt) : '') . '</td>'
+                . '<td>' . ($totalFmt !== '' ? 'Rp. ' . e($totalFmt) : '') . '</td>'
                 . '<td>' . e((string) ($r->note ?? '')) . '</td>'
                 . '</tr>';
         }
         $html .= '</tbody><tfoot><tr>'
             . '<td colspan="5">Grand Total</td>'
-            . '<td>' . e((string) $grandTotal) . '</td>'
+            . '<td>' . 'Rp. ' . e(number_format((float) $grandTotal, 0, ',', '.')) . '</td>'
             . '<td></td>'
             . '</tr></tfoot></table>';
         $html .= '</body></html>';
