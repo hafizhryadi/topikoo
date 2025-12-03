@@ -106,7 +106,7 @@ export default function RedeemForm() {
     return (
         <AppLayout>
             <Head title={props.title ?? 'Manual Promo Redeem'} />
-            <div className="mx-auto my-10 max-w-lg rounded-2xl border border-[#E6D5C7] bg-[#FFF7ED] p-6 shadow-sm dark:border-[#3A2A1E] dark:bg-[#6c4f31]">
+            <div className="mx-auto my-10 max-w-lg rounded-2xl border border-[#E6D5C7] bg-[#FFF7ED] p-6 shadow-sm dark:border-[#3A2A1E] dark:bg-[#1d150c]">
                 <h3 className="mb-5 text-lg font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
                     {props.title ?? 'Manual Promo Redeem'}
                 </h3>

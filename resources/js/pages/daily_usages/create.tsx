@@ -72,9 +72,9 @@ export default function Create({ items }: Props) {
         >
             <Head title="Record Daily Usage" />
 
-            <div className="min-h-screen bg-[#FFF7ED] py-12 dark:bg-[#6c4f31]">
+            <div className="min-h-screen bg-[#FFF7ED] p-6 dark:bg-[#1d150c]">
                 <div className="mx-auto max-w-5xl sm:px-6 lg:px-8">
-                    <div className="rounded-2xl border border-[#E6D4C5] bg-white/90 p-6 shadow-sm dark:border-[#A9825C] dark:bg-[#886238]">
+                    <div className="rounded-2xl border border-[#E6D4C5] bg-white/90 p-6 shadow-sm dark:border-[#A9825C] dark:bg-[#1d150c]">
                         <h2 className="mb-6 text-xl font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
                             Record Daily Usage
                         </h2>
@@ -135,11 +135,13 @@ export default function Create({ items }: Props) {
                                 {data.items.map((item, index) => (
                                     <div
                                         key={index}
-                                        className="flex flex-col gap-4 rounded-2xl border border-[#E6D4C5] bg-[#FFFDF9] p-4 sm:flex-row sm:items-start dark:border-[#A9825C] dark:bg-[#7a5638]"
+                                        className="flex flex-col gap-4 rounded-2xl border border-[#E6D4C5] bg-[#FFFDF9] p-4 sm:flex-row sm:items-start dark:border-[#A9825C] dark:bg-[#1d150c]"
                                     >
                                         <div className="flex-1 space-y-3">
                                             <div>
-                                                <Label htmlFor={`item_${index}`}>
+                                                <Label
+                                                    htmlFor={`item_${index}`}
+                                                >
                                                     Item
                                                 </Label>
                                                 <select
@@ -184,7 +186,9 @@ export default function Create({ items }: Props) {
                                             </div>
 
                                             <div>
-                                                <Label htmlFor={`quantity_${index}`}>
+                                                <Label
+                                                    htmlFor={`quantity_${index}`}
+                                                >
                                                     Quantity
                                                 </Label>
                                                 <Input

@@ -32,7 +32,7 @@ export default function Index({ daily_usages }: Props) {
         >
             <Head title="Daily Usages" />
 
-            <div className="min-h-screen py-12">
+            <div className="min-h-screen bg-[#FFF7ED] p-6 py-12 dark:bg-[#1d150c]">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-xl font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
@@ -50,40 +50,43 @@ export default function Index({ daily_usages }: Props) {
                         emptyMessage="No daily usages recorded."
                         head={
                             <tr className="bg-[#8B4513] dark:bg-[#4a2e16]">
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Date
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Items
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Total Price
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Notes
                                 </th>
                             </tr>
                         }
                         rows={daily_usages.map((usage) => (
                             <tr key={usage.id}>
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
-                                    {new Date(usage.date).toLocaleDateString('id-ID', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                    })}
-
+                                <td className="px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                    {new Date(usage.date).toLocaleDateString(
+                                        'id-ID',
+                                        {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                        },
+                                    )}
                                 </td>
                                 <td className="px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
                                     <ul className="list-disc pl-4">
                                         {usage.items.map((item) => (
                                             <li key={item.id}>
-                                                {item.item_name}: {item.quantity_used}
+                                                {item.item_name}:{' '}
+                                                {item.quantity_used}
                                             </li>
                                         ))}
                                     </ul>
                                 </td>
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                <td className="px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]">
                                     {Intl.NumberFormat(undefined, {
                                         style: 'currency',
                                         currency: 'IDR',
@@ -91,7 +94,8 @@ export default function Index({ daily_usages }: Props) {
                                     }).format(
                                         usage.items.reduce(
                                             (sum, it) =>
-                                                sum + Number(it.total_price ?? 0),
+                                                sum +
+                                                Number(it.total_price ?? 0),
                                             0,
                                         ),
                                     )}

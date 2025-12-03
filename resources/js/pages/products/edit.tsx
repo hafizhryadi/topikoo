@@ -37,7 +37,7 @@ export default function Edit() {
     return (
         <AppLayout>
             <Head title={`Edit ${product.name}`} />
-            <div className="py-12">
+            <div className="bg-[#FFF7ED] p-6 py-12 dark:bg-[#1d150c]">
                 <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
                     <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-gray-100">
                         Edit Product

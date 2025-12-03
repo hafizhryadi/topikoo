@@ -139,7 +139,7 @@ export default function Index() {
         <AppLayout>
             <Head title="Transactions" />
 
-            <div className="py-12">
+            <div className="bg-[#FFF7ED] p-6 py-12 dark:bg-[#1d150c]">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -299,6 +299,7 @@ export default function Index() {
                                                             value={
                                                                 row.unit_price
                                                             }
+                                                            disabled={true}
                                                             onChange={(e) =>
                                                                 onUnitPriceChange(
                                                                     idx,

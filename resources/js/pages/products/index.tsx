@@ -43,7 +43,7 @@ export default function Index() {
     return (
         <AppLayout>
             <Head title="Products" />
-            <div className="min-h-screen py-12">
+            <div className="min-h-screen bg-[#FFF7ED] p-6 py-12 dark:bg-[#1d150c]">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-xl font-semibold text-[#2C1810] dark:text-[#FFF6EC]">
@@ -159,16 +159,16 @@ export default function Index() {
                         emptyMessage="No products found."
                         head={
                             <tr className="bg-[#8B4513] dark:bg-[#4a2e16]">
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Name
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Description
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-white uppercase">
                                     Price
                                 </th>
-                                <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-white">
+                                <th className="px-6 py-3 text-right text-xs font-semibold tracking-wider text-white uppercase">
                                     Actions
                                 </th>
                             </tr>
@@ -177,13 +177,13 @@ export default function Index() {
                             products && products.length > 0
                                 ? products.map((p) => (
                                       <tr key={p.id}>
-                                          <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                          <td className="px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]">
                                               {p.name}
                                           </td>
                                           <td className="px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
                                               {p.description || '-'}
                                           </td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-sm text-[#3A2A1E] dark:text-[#FFF6EC]">
+                                          <td className="px-6 py-4 text-sm whitespace-nowrap text-[#3A2A1E] dark:text-[#FFF6EC]">
                                               {typeof p.price === 'number'
                                                   ? p.price.toLocaleString()
                                                   : p.price}

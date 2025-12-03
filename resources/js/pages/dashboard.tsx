@@ -57,7 +57,7 @@ export default function Dashboard() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             {/* Wrapper utama dengan tema kopi */}
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl bg-[#FFF7ED] p-6 dark:bg-[#6c4f31]">
+            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl bg-[#FFF7ED] p-6 dark:bg-[#1d150c]">
                 {/* Header */}
                 <header className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
                     <div className="flex items-center gap-3">

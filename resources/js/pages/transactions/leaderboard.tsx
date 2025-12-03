@@ -34,7 +34,7 @@ export default function Leaderboard() {
     return (
         <AppLayout>
             <Head title="Leaderboard" />
-            <div className="bg-[#FFF7ED] p-6 py-12 dark:bg-[#6c4f31]">
+            <div className="bg-[#FFF7ED] p-6 dark:bg-[#1d150c]">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
