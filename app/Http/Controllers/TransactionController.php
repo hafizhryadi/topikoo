@@ -54,45 +54,49 @@ class TransactionController extends Controller
             ->orderBy('date')
             ->get(['id', 'date', 'phone', 'product_id', 'amount', 'unit_price', 'total_price', 'note']);
 
-        // Generate an Excel-compatible HTML table and serve as .xls
-        $filename = 'weekly-transactions-' . now()->format('Ymd_His') . '.xlsx';
+        // Build HTML content for PDF
+        $grandTotal = 0;
+        $html = '<html><head><meta charset="UTF-8"><style>
+            body{font-family:sans-serif;color:#333}
+            h1{font-size:16px;margin-bottom:10px}
+            table{width:100%;border-collapse:collapse}
+            th,td{border:1px solid #ccc;padding:6px;font-size:12px}
+            th{background:#f5f5f5;text-align:left}
+            tfoot td{font-weight:bold}
+        </style></head><body>';
+        $html .= '<h1>Weekly Transactions Report (' . e($from->toDateString()) . ' - ' . e($to->toDateString()) . ')</h1>';
+        $html .= '<table><thead><tr>';
+        foreach (['Date', 'Phone', 'Product', 'Amount', 'Unit Price', 'Total', 'Notes'] as $h) {
+            $html .= '<th>' . e($h) . '</th>';
+        }
+        $html .= '</tr></thead><tbody>';
+        foreach ($rows as $r) {
+            $grandTotal += (float) ($r->total_price ?? 0);
+            $html .= '<tr>'
+                . '<td>' . e($r->date) . '</td>'
+                . '<td>' . e((string) ($r->phone ?? '')) . '</td>'
+                . '<td>' . e(optional($r->product)->name) . '</td>'
+                . '<td>' . e((string) ($r->amount ?? '')) . '</td>'
+                . '<td>' . e((string) ($r->unit_price ?? '')) . '</td>'
+                . '<td>' . e((string) ($r->total_price ?? '')) . '</td>'
+                . '<td>' . e((string) ($r->note ?? '')) . '</td>'
+                . '</tr>';
+        }
+        $html .= '</tbody><tfoot><tr>'
+            . '<td colspan="5">Grand Total</td>'
+            . '<td>' . e((string) $grandTotal) . '</td>'
+            . '<td></td>'
+            . '</tr></tfoot></table>';
+        $html .= '</body></html>';
 
-        return response()->streamDownload(function () use ($rows) {
-            echo '<html><head><meta charset="UTF-8"></head><body>';
-            echo '<table border="1">';
-            echo '<tr>';
-            foreach (['Date', 'Phone', 'Product', 'Amount', 'Unit Price', 'Total', 'Notes'] as $h) {
-                echo '<th>' . htmlspecialchars($h, ENT_QUOTES, 'UTF-8') . '</th>';
-            }
-            echo '</tr>';
-            $grandTotal = 0;
-            foreach ($rows as $r) {
-                echo '<tr>';
-                $cols = [
-                    $r->date,
-                    $r->phone,
-                    optional($r->product)->name,
-                    $r->amount,
-                    $r->unit_price,
-                    $r->total_price,
-                    $r->note,
-                ];
-                $grandTotal += (float) ($r->total_price ?? 0);
-                foreach ($cols as $c) {
-                    echo '<td>' . htmlspecialchars((string) ($c ?? ''), ENT_QUOTES, 'UTF-8') . '</td>';
-                }
-                echo '</tr>';
-            }
-            // Grand total row
-            echo '<tr>';
-            echo '<td colspan="5" style="font-weight:bold">Grand Total</td>';
-            echo '<td style="font-weight:bold">' . htmlspecialchars((string) $grandTotal, ENT_QUOTES, 'UTF-8') . '</td>';
-            echo '<td></td>';
-            echo '</tr>';
-            echo '</table>';
-            echo '</body></html>';
+        // Generate PDF using mPDF
+        $filename = 'weekly-transactions-' . now()->format('Ymd_His') . '.pdf';
+        return response()->streamDownload(function () use ($html) {
+            $mpdf = new \Mpdf\Mpdf(['format' => 'A4']);
+            $mpdf->WriteHTML($html);
+            $mpdf->Output();
         }, $filename, [
-            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Type' => 'application/pdf',
         ]);
     }
 
